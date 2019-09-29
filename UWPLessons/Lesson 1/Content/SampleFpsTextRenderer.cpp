@@ -1,6 +1,5 @@
 ﻿#include "pch.h"
 #include "SampleFpsTextRenderer.h"
-
 #include "Common/DirectXHelper.h"
 
 using namespace Lesson_1;

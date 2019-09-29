@@ -112,6 +112,8 @@ void App::Run()
 	{
 		if (m_windowVisible)
 		{
+			// Отправка всех событий, ожидающих в очереди.Если нет ожидающих событий, не ждите появления нового события, вместо этого немедленно вернитесь.
+			// Эта опция предоставляется специально для реализаций поставщика представления с IFrameworkView и должна использоваться в приложении UWP с использованием DirectX с C++.
 			CoreWindow::GetForCurrentThread()->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessAllIfPresent);
 
 			m_main->Update();
@@ -123,6 +125,7 @@ void App::Run()
 		}
 		else
 		{
+			// Отправка всех доступных на данный момент событий в очередь. Если нет ожидающих событий, дождитесь следующего нового события.
 			CoreWindow::GetForCurrentThread()->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessOneAndAllPending);
 		}
 	}

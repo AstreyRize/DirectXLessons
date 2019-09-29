@@ -1,10 +1,8 @@
 ﻿#include "pch.h"
 #include "Sample3DSceneRenderer.h"
-
 #include "..\Common\DirectXHelper.h"
 
 using namespace Lesson_1;
-
 using namespace DirectX;
 using namespace Windows::Foundation;
 
@@ -24,7 +22,7 @@ Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceRes
 
 // Initializes view parameters when the window size changes.
 
-// Инициализируем параметры отображения когда размера окна меняется.
+// Инициализируем параметры отображения когда размер окна меняется.
 void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 {
 	Size outputSize = m_deviceResources->GetOutputSize();
