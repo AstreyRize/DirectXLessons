@@ -3,6 +3,8 @@
 namespace DX
 {
 	// Provides an interface for an application that owns DeviceResources to be notified of the device being lost or created.
+
+	// Представляет собой интерфейс для уведомления о потере или создании устройства.
 	interface IDeviceNotify
 	{
 		virtual void OnDeviceLost() = 0;
@@ -10,6 +12,8 @@ namespace DX
 	};
 
 	// Controls all the DirectX device resources.
+
+	// Управление всеми ресурсами устройства DirectX.
 	class DeviceResources
 	{
 	public:
@@ -25,9 +29,11 @@ namespace DX
 		void Present();
 
 		// The size of the render target, in pixels.
+		// Размер контейнера для отрисовки в пикселях.
 		Windows::Foundation::Size	GetOutputSize() const					{ return m_outputSize; }
 
 		// The size of the render target, in dips.
+		// Размер контейнера для отрисовки в dips (не знаю что это).
 		Windows::Foundation::Size	GetLogicalSize() const					{ return m_logicalSize; }
 		float						GetDpi() const							{ return m_effectiveDpi; }
 
@@ -58,29 +64,35 @@ namespace DX
 		DXGI_MODE_ROTATION ComputeDisplayRotation();
 
 		// Direct3D objects.
+		// Объекты Direct3D.
 		Microsoft::WRL::ComPtr<ID3D11Device3>			m_d3dDevice;
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext3>	m_d3dContext;
 		Microsoft::WRL::ComPtr<IDXGISwapChain3>			m_swapChain;
 
 		// Direct3D rendering objects. Required for 3D.
+		// Объекты для отрисовки Direct3D. Обязательно для 3D.
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView1>	m_d3dRenderTargetView;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView>	m_d3dDepthStencilView;
 		D3D11_VIEWPORT									m_screenViewport;
 
 		// Direct2D drawing components.
+		// Компоненты отрисовки для Direct2D.
 		Microsoft::WRL::ComPtr<ID2D1Factory3>		m_d2dFactory;
 		Microsoft::WRL::ComPtr<ID2D1Device2>		m_d2dDevice;
 		Microsoft::WRL::ComPtr<ID2D1DeviceContext2>	m_d2dContext;
 		Microsoft::WRL::ComPtr<ID2D1Bitmap1>		m_d2dTargetBitmap;
 
 		// DirectWrite drawing components.
+		// Компоненты для отрисовки DirectWrite.
 		Microsoft::WRL::ComPtr<IDWriteFactory3>		m_dwriteFactory;
 		Microsoft::WRL::ComPtr<IWICImagingFactory2>	m_wicFactory;
 
 		// Cached reference to the Window.
+		// Сохраненные ссылки на окно.
 		Platform::Agile<Windows::UI::Core::CoreWindow> m_window;
 
 		// Cached device properties.
+		// Сохраненные свойства устройства.
 		D3D_FEATURE_LEVEL								m_d3dFeatureLevel;
 		Windows::Foundation::Size						m_d3dRenderTargetSize;
 		Windows::Foundation::Size						m_outputSize;
@@ -90,6 +102,7 @@ namespace DX
 		float											m_dpi;
 
 		// This is the DPI that will be reported back to the app. It takes into account whether the app supports high resolution screens or not.
+		// Это DPI который будет оповещать приложение.
 		float m_effectiveDpi;
 
 		// Transforms used for display orientation.

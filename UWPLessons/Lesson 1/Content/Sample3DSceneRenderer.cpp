@@ -72,7 +72,7 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 	// Eye is at (0,0.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis.
 
 	// Глаз находится на (0,0.7,1.5), глядя на точку (0,-0.1,0) с вектором вверх вдоль оси Y.
-	static const XMVECTORF32 eye = { 0.0f, 0.7f, 1.5f, 0.0f };
+	static const XMVECTORF32 eye = { 50.0f, 50.0f, 1.5f, 0.0f };
 	static const XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
 	static const XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
 
@@ -291,14 +291,67 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		// Загружаем мешь вершин. Каждая вершина имеет позицию и цвет.
 		static const VertexPositionColor cubeVertices[] = 
 		{
-			{XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f)},
-			{XMFLOAT3(-0.5f, -0.5f,  0.5f), XMFLOAT3(0.0f, 0.0f, 1.0f)},
-			{XMFLOAT3(-0.5f,  0.5f, -0.5f), XMFLOAT3(0.0f, 1.0f, 0.0f)},
-			{XMFLOAT3(-0.5f,  0.5f,  0.5f), XMFLOAT3(0.0f, 1.0f, 1.0f)},
-			{XMFLOAT3( 0.5f, -0.5f, -0.5f), XMFLOAT3(1.0f, 0.0f, 0.0f)},
-			{XMFLOAT3( 0.5f, -0.5f,  0.5f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
-			{XMFLOAT3( 0.5f,  0.5f, -0.5f), XMFLOAT3(1.0f, 1.0f, 0.0f)},
-			{XMFLOAT3( 0.5f,  0.5f,  0.5f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
+			{XMFLOAT3(0.00000f, -12.50000f, 20.00000f), XMFLOAT3(0.0f, 1.0f, 1.0f)},
+			{XMFLOAT3(0.00000f, -12.50000f, 0.00000f), XMFLOAT3(0.0f, 1.0f, 1.0f)},
+			{XMFLOAT3(10.82532f, -6.25000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
+			{XMFLOAT3(10.82532f, -6.25000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
+			{XMFLOAT3(0.00000f, -12.50000f, 20.00000f), XMFLOAT3(0.0f, 1.0f, 1.0f)},
+			{XMFLOAT3(10.82532f, -6.25000f, 0.00000f), XMFLOAT3(1.0f, 0.0f, 0.0f)},
+			{XMFLOAT3(10.82532f, -6.25000f, 20.00000f), XMFLOAT3(0.0f, 0.0f, 0.0f)},
+			{XMFLOAT3(10.82532f, -6.25000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 0.0f)},
+			{XMFLOAT3(10.82532f, 6.25000f, 0.00000f), XMFLOAT3(1.0f, 0.0f, 0.0f)},
+			{XMFLOAT3(10.82532f, 6.25000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 0.0f)},
+			{XMFLOAT3(10.82532f, -6.25000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
+			{XMFLOAT3(10.82532f, 6.25000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
+			{XMFLOAT3(10.82532f, 6.25000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
+			{XMFLOAT3(10.82532f, 6.25000f, 0.00000f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
+			{XMFLOAT3(0.00000f, 12.50000f, 0.00000f), XMFLOAT3(0.0f, 0.0f, 1.0f)},
+			{XMFLOAT3(0.00000f, 12.50000f, 20.00000f), XMFLOAT3(0.0f, 1.0f, 0.0f)},
+			{XMFLOAT3(10.82532f, 6.25000f, 20.00000f), XMFLOAT3(0.0f, 0.0f, 0.0f)},
+			{XMFLOAT3(0.00000f, 12.50000f, 0.00000f), XMFLOAT3(1.0f, 0.0f, 0.0f)},
+			{XMFLOAT3(0.00000f, 12.50000f, 20.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
+			{XMFLOAT3(0.00000f, 12.50000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
+			{XMFLOAT3(-10.82532f, 6.25000f, 0.00000f), XMFLOAT3(0.0f, 0.0f, 0.0f)},
+			{XMFLOAT3(-10.82532f, 6.25000f, 20.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
+			{XMFLOAT3(0.00000f, 12.50000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 0.0f)},
+			{XMFLOAT3(-10.82532f, 6.25000f, 0.00000f), XMFLOAT3(0.0f, 0.0f, 1.0f)},
+			{XMFLOAT3(-10.82532f, 6.25000f, 20.00000f), XMFLOAT3(0.0f, 1.0f, 0.0f)},
+			{XMFLOAT3(-10.82532f, 6.25000f, 0.00000f), XMFLOAT3(0.0f, 1.0f, 0.0f)},
+			{XMFLOAT3(-10.82532f, -6.25000f, 0.00000f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
+			{XMFLOAT3(-10.82532f, -6.25000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 0.0f)},
+			{XMFLOAT3(-10.82532f, 6.25000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
+			{XMFLOAT3(-10.82532f, -6.25000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
+			{XMFLOAT3(-10.82532f, -6.25000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
+			{XMFLOAT3(-10.82532f, -6.25000f, 0.00000f), XMFLOAT3(0.0f, 0.0f, 1.0f)},
+			{XMFLOAT3(0.00000f, -12.50000f, 0.00000f), XMFLOAT3(0.0f, 0.0f, 0.0f)},
+			{XMFLOAT3(0.00000f, -12.50000f, 20.00000f), XMFLOAT3(1.0f, 1.0f, 0.0f)},
+			{XMFLOAT3(-10.82532f, -6.25000f, 20.00000f), XMFLOAT3(0.0f, 1.0f, 1.0f)},
+			{XMFLOAT3(0.00000f, -12.50000f, 0.00000f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
+			{XMFLOAT3(-10.82532f, -6.25000f, 20.00000f), XMFLOAT3(0.0f, 1.0f, 0.0f)},
+			{XMFLOAT3(0.00000f, -12.50000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
+			{XMFLOAT3(10.82532f, -6.25000f, 20.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
+			{XMFLOAT3(10.82532f, 6.25000f, 20.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
+			{XMFLOAT3(0.00000f, 12.50000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 0.0f)},
+			{XMFLOAT3(-10.82532f, -6.25000f, 20.00000f), XMFLOAT3(0.0f, 1.0f, 0.0f)},
+			{XMFLOAT3(-10.82532f, 6.25000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 0.0f)},
+			{XMFLOAT3(-10.82532f, -6.25000f, 20.00000f), XMFLOAT3(0.0f, 1.0f, 0.0f)},
+			{XMFLOAT3(0.00000f, 12.50000f, 20.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
+			{XMFLOAT3(10.82532f, -6.25000f, 20.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
+			{XMFLOAT3(10.82532f, 6.25000f, 20.00000f), XMFLOAT3(0.0f, 1.0f, 1.0f)},
+			{XMFLOAT3(-10.82532f, -6.25000f, 20.00000f), XMFLOAT3(0.0f, 1.0f, 0.0f)},
+			{XMFLOAT3(10.82532f, 6.25000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
+			{XMFLOAT3(10.82532f, -6.25000f, 0.00000f), XMFLOAT3(0.0f, 0.0f, 1.0f)},
+			{XMFLOAT3(0.00000f, -12.50000f, 0.00000f), XMFLOAT3(0.0f, 0.0f, 1.0f)},
+			{XMFLOAT3(-10.82532f, -6.25000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 0.0f)},
+			{XMFLOAT3(-10.82532f, 6.25000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
+			{XMFLOAT3(0.00000f, 12.50000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 0.0f)},
+			{XMFLOAT3(-10.82532f, -6.25000f, 0.00000f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
+			{XMFLOAT3(10.82532f, 6.25000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 0.0f)},
+			{XMFLOAT3(0.00000f, -12.50000f, 0.00000f), XMFLOAT3(0.0f, 0.0f, 1.0f)},
+			{XMFLOAT3(-10.82532f, -6.25000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 0.0f)},
+			{XMFLOAT3(0.00000f, 12.50000f, 0.00000f), XMFLOAT3(0.0f, 1.0f, 1.0f)},
+			{XMFLOAT3(10.82532f, 6.25000f, 0.00000f), XMFLOAT3(0.0f, 1.0f, 1.0f)},
+
 		};
 
 		D3D11_SUBRESOURCE_DATA vertexBufferData = {0};
@@ -327,23 +380,26 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		// первый треугольник этой сетки.
 		static const unsigned short cubeIndices [] =
 		{
-			0,2,1, // -x
-			1,2,3,
-
-			4,5,6, // +x
-			5,7,6,
-
-			0,1,5, // -y
-			0,5,4,
-
-			2,6,7, // +y
-			2,7,3,
-
-			0,4,6, // -z
-			0,6,2,
-
-			1,3,7, // +z
-			1,7,5,
+			0, 1, 2,
+			3, 4, 5,
+			6, 7, 8,
+			9, 10, 11,
+			12, 13, 14,
+			15, 16, 17,
+			18, 19, 20,
+			21, 22, 23,
+			24, 25, 26,
+			27, 28, 29,
+			30, 31, 32,
+			33, 34, 35,
+			36, 37, 38,
+			39, 40, 41,
+			42, 43, 44,
+			45, 46, 47,
+			48, 49, 50,
+			51, 52, 53,
+			54, 55, 56,
+			57, 58, 59,
 		};
 
 		m_indexCount = ARRAYSIZE(cubeIndices);
