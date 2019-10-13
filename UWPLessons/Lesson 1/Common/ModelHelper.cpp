@@ -7,12 +7,13 @@
 using namespace DirectX;
 using namespace DX;
 using namespace std;
+using namespace Windows::ApplicationModel;
 
 // Список вершин модели.
 vector<Vertex> result;
 
 // Класс для работы с STL моделями.
-ModelHelper::ModelHelper(string modelPath)
+ModelHelper::ModelHelper(wstring modelPath)
 {
 	// Хранимая процедура для получения координат вершин из файла STL.
 	regex re("^[\\s]{1,}vertex{1}\\s(\\-*\\d+\\.\\d+e[\\+|\\-]\\d{2})\\s(\\-*\\d+\\.\\d+e[\\+|\\-]\\d{2})\\s(\\-*\\d+\\.\\d+e[\\+|\\-]\\d{2})");
@@ -22,12 +23,19 @@ ModelHelper::ModelHelper(string modelPath)
 	string::size_type sz;
 
 	// Читаем все строки из файла с моделью.
-	ifstream file(modelPath);
-	string str;
+	char line[1024];
+	std::wstring wpath = Package::Current->InstalledLocation->Path->Data();
+	wpath += modelPath;
 
-	while (getline(file, str))
-	{
-		fileLines.push_back(str);
+	FILE* file = nullptr;
+	errno_t e = _wfopen_s(&file, wpath.c_str(), L"rb");
+
+	if (file == NULL) {
+		return;
+	}
+
+	while (fgets(line, 1024, file)) {
+		fileLines.push_back(line);
 	}
 
 	// Ищем в файле координаты вершин.
@@ -79,21 +87,21 @@ ModelHelper::ModelHelper(string modelPath)
 }
 
 // Получаем список вершин в виде массива VertexPositionColor.
-Lesson_1::VertexPositionColor* ModelHelper::GetVertices()
+vector < Lesson_1::VertexPositionColor> ModelHelper::GetVertices()
 {
 	vector<Lesson_1::VertexPositionColor> vertexList;
 
 	// Берем каждую вершину и помещаем в массив.
 	for (int i = 0; i < result.size(); i++)
 	{
-		vertexList.push_back({ XMFLOAT3(result[i].X, result[i].Y, result[i].Z), XMFLOAT3(1.0f, 1.0f, 1.0f) });
+		vertexList.push_back({ XMFLOAT3(result[i].X, result[i].Y, result[i].Z), XMFLOAT3(1.0f, 0.5f, 0.0f) });
 	}
 
-	return &vertexList[0];
+	return vertexList;
 }
 
 // Создаем массив связей из вершин. Каждые три вершины образуют треугольник.
-unsigned short* ModelHelper::GetReletionships()
+vector<unsigned short> ModelHelper::GetReletionships()
 {
 	vector<vector<unsigned short>> vertexReletionships;
 
@@ -162,5 +170,5 @@ unsigned short* ModelHelper::GetReletionships()
 		reletionshipsResult.push_back(reletionships[2]);
 	}
 
-	return &reletionshipsResult[0];
+	return reletionshipsResult;
 }

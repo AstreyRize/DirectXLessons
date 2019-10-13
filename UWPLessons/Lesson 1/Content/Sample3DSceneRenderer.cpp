@@ -7,7 +7,6 @@ using namespace DirectX;
 using namespace Windows::Foundation;
 
 // Loads vertex and pixel shaders from files and instantiates the cube geometry.
-
 // Загружаем вершины и шейдеры пикселей из файла и создаем экземпляр геометрии куба.
 Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
 	m_loadingComplete(false),
@@ -21,7 +20,6 @@ Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceRes
 }
 
 // Initializes view parameters when the window size changes.
-
 // Инициализируем параметры отображения когда размер окна меняется.
 void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 {
@@ -31,7 +29,6 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 
 	// This is a simple example of change that can be made when the app is in
 	// portrait or snapped view.
-
 	// 	Это простой пример изменения которое может произойти когда приложение в альбомном или портретном режиме.
 	if (aspectRatio < 1.0f)
 	{
@@ -51,28 +48,16 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 	// это преобразование не должно применяться.
 
 	// This sample makes use of a right-handed coordinate system using row-major matrices.
-
 	// В этом примере используется правосторонняя система координат с использованием матриц основных строк.
-	XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovRH(
-		fovAngleY,
-		aspectRatio,
-		0.01f,
-		100.0f
-		);
-
+	XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 0.01f, 100.0f);
 	XMFLOAT4X4 orientation = m_deviceResources->GetOrientationTransform3D();
-
 	XMMATRIX orientationMatrix = XMLoadFloat4x4(&orientation);
 
-	XMStoreFloat4x4(
-		&m_constantBufferData.projection,
-		XMMatrixTranspose(perspectiveMatrix * orientationMatrix)
-		);
+	XMStoreFloat4x4(&m_constantBufferData.projection, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
 
 	// Eye is at (0,0.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis.
-
 	// Глаз находится на (0,0.7,1.5), глядя на точку (0,-0.1,0) с вектором вверх вдоль оси Y.
-	static const XMVECTORF32 eye = { 50.0f, 50.0f, 1.5f, 0.0f };
+	static const XMVECTORF32 eye = { 50.0f, 0.0f, 0.0f, 0.0f };
 	static const XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
 	static const XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
 
@@ -80,14 +65,12 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 }
 
 // Called once per frame, rotates the cube and calculates the model and view matrices.
-
 // Вызывается раз в кадр, поворачивает куб и рассчитывает модель и отображение матрицы.
 void Sample3DSceneRenderer::Update(DX::StepTimer const& timer)
 {
 	if (!m_tracking)
 	{
 		// Convert degrees to radians, then convert seconds to rotation angle
-
 		// Конвертирует градусы в радианы, затем конвертирует секунды в углы поворота.
 		float radiansPerSecond = XMConvertToRadians(m_degreesPerSecond);
 		double totalRotation = timer.GetTotalSeconds() * radiansPerSecond;
@@ -98,12 +81,10 @@ void Sample3DSceneRenderer::Update(DX::StepTimer const& timer)
 }
 
 // Rotate the 3D cube model a set amount of radians.
-
 // Поворачивает 3д модель куба на заданное количество радиан.
 void Sample3DSceneRenderer::Rotate(float radians)
 {
 	// Prepare to pass the updated model matrix to the shader
-
 	// Подготовка к передаче обновленной матрицы модели шейдеру
 	XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixRotationY(radians)));
 }
@@ -114,7 +95,6 @@ void Sample3DSceneRenderer::StartTracking()
 }
 
 // When tracking, the 3D cube can be rotated around its Y axis by tracking pointer position relative to the output screen width.
-
 // При отслеживании трехмерный куб можно вращать вокруг своей оси Y, отслеживая положение указателя относительно ширины выходного экрана.
 void Sample3DSceneRenderer::TrackingUpdate(float positionX)
 {
@@ -131,12 +111,10 @@ void Sample3DSceneRenderer::StopTracking()
 }
 
 // Renders one frame using the vertex and pixel shaders.
-
 // Отрисовывает один кадр используя вершины и пиксельные шейдеры.
 void Sample3DSceneRenderer::Render()
 {
 	// Loading is asynchronous. Only draw geometry after it's loaded.
-
 	// Загружаем асинхронно. Рисуем геометрию после того, как загрузится.
 	if (!m_loadingComplete)
 	{
@@ -146,226 +124,83 @@ void Sample3DSceneRenderer::Render()
 	auto context = m_deviceResources->GetD3DDeviceContext();
 
 	// Prepare the constant buffer to send it to the graphics device.
-
 	// Подготавливаем постоянный буфер для отправки его на графическое устройство.
-	context->UpdateSubresource1(
-		m_constantBuffer.Get(),
-		0,
-		NULL,
-		&m_constantBufferData,
-		0,
-		0,
-		0
-		);
+	context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
 
 	// Each vertex is one instance of the VertexPositionColor struct.
-
 	// Каждая вершина - один экземпляр структуры VertexPositionColor.
 	UINT stride = sizeof(VertexPositionColor);
 	UINT offset = 0;
-	context->IASetVertexBuffers(
-		0,
-		1,
-		m_vertexBuffer.GetAddressOf(),
-		&stride,
-		&offset
-		);
 
-	context->IASetIndexBuffer(
-		m_indexBuffer.Get(),
-		DXGI_FORMAT_R16_UINT, // Each index is one 16-bit unsigned integer (short). Каждый индекс - один 16-ти битный без знаковый int.
-		0
-		);
+	context->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
 
+	// Each index is one 16-bit unsigned integer (short). Каждый индекс - один 16-ти битный без знаковый int.
+	context->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 	context->IASetInputLayout(m_inputLayout.Get());
 
 	// Attach our vertex shader.
-
 	// Присоединяем наш шейдер вершин.
-	context->VSSetShader(
-		m_vertexShader.Get(),
-		nullptr,
-		0
-		);
+	context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
 
 	// Send the constant buffer to the graphics device.
-
 	// Передаем буфер в графическое устройство.
-	context->VSSetConstantBuffers1(
-		0,
-		1,
-		m_constantBuffer.GetAddressOf(),
-		nullptr,
-		nullptr
-		);
+	context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
 	// Attach our pixel shader.
-
 	// Присоединяем наш пиксельный шейдер.
-	context->PSSetShader(
-		m_pixelShader.Get(),
-		nullptr,
-		0
-		);
+	context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
 
 	// Draw the objects.
-
 	// Рисуем объект.
-	context->DrawIndexed(
-		m_indexCount,
-		0,
-		0
-		);
+	context->DrawIndexed(m_indexCount, 0, 0);
 }
 
 void Sample3DSceneRenderer::CreateDeviceDependentResources()
 {
 	// Load shaders asynchronously.
-
 	// Загрузка шейдеров асинхронно.
 	auto loadVSTask = DX::ReadDataAsync(L"SampleVertexShader.cso");
 	auto loadPSTask = DX::ReadDataAsync(L"SamplePixelShader.cso");
 
 	// After the vertex shader file is loaded, create the shader and input layout.
-
 	// После шейдеров вершин файл загружается, создает шейдеры и выходной слой.
 	auto createVSTask = loadVSTask.then([this](const std::vector<byte>& fileData) {
-		DX::ThrowIfFailed(
-			m_deviceResources->GetD3DDevice()->CreateVertexShader(
-				&fileData[0],
-				fileData.size(),
-				nullptr,
-				&m_vertexShader
-				)
-			);
+		m_deviceResources->GetD3DDevice()->CreateVertexShader(&fileData[0], fileData.size(), nullptr, &m_vertexShader);
 
-		static const D3D11_INPUT_ELEMENT_DESC vertexDesc [] =
+		static const D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 
-		DX::ThrowIfFailed(
-			m_deviceResources->GetD3DDevice()->CreateInputLayout(
-				vertexDesc,
-				ARRAYSIZE(vertexDesc),
-				&fileData[0],
-				fileData.size(),
-				&m_inputLayout
-				)
-			);
-	});
+		m_deviceResources->GetD3DDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), &fileData[0], fileData.size(), &m_inputLayout);
+		});
 
 	// After the pixel shader file is loaded, create the shader and constant buffer.
-
 	// После пиксельных шейдеров файл загружается, создает шейдеры и буфер констант.
 	auto createPSTask = loadPSTask.then([this](const std::vector<byte>& fileData) {
-		DX::ThrowIfFailed(
-			m_deviceResources->GetD3DDevice()->CreatePixelShader(
-				&fileData[0],
-				fileData.size(),
-				nullptr,
-				&m_pixelShader
-				)
-			);
-
-		CD3D11_BUFFER_DESC constantBufferDesc(sizeof(ModelViewProjectionConstantBuffer) , D3D11_BIND_CONSTANT_BUFFER);
-		DX::ThrowIfFailed(
-			m_deviceResources->GetD3DDevice()->CreateBuffer(
-				&constantBufferDesc,
-				nullptr,
-				&m_constantBuffer
-				)
-			);
-	});
+		m_deviceResources->GetD3DDevice()->CreatePixelShader(&fileData[0], fileData.size(), nullptr, &m_pixelShader);
+		CD3D11_BUFFER_DESC constantBufferDesc(sizeof(ModelViewProjectionConstantBuffer), D3D11_BIND_CONSTANT_BUFFER);
+		m_deviceResources->GetD3DDevice()->CreateBuffer(&constantBufferDesc, nullptr, &m_constantBuffer);
+		});
 
 	// Once both shaders are loaded, create the mesh.
-
 	// Когда оба шейдера загружены, создаем мешь.
-	auto createCubeTask = (createPSTask && createVSTask).then([this] () {
-
+	auto createCubeTask = (createPSTask && createVSTask).then([this]() {
 		// Load mesh vertices. Each vertex has a position and a color.
-
 		// Загружаем мешь вершин. Каждая вершина имеет позицию и цвет.
-		static const VertexPositionColor cubeVertices[] = 
-		{
-			{XMFLOAT3(0.00000f, -12.50000f, 20.00000f), XMFLOAT3(0.0f, 1.0f, 1.0f)},
-			{XMFLOAT3(0.00000f, -12.50000f, 0.00000f), XMFLOAT3(0.0f, 1.0f, 1.0f)},
-			{XMFLOAT3(10.82532f, -6.25000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
-			{XMFLOAT3(10.82532f, -6.25000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
-			{XMFLOAT3(0.00000f, -12.50000f, 20.00000f), XMFLOAT3(0.0f, 1.0f, 1.0f)},
-			{XMFLOAT3(10.82532f, -6.25000f, 0.00000f), XMFLOAT3(1.0f, 0.0f, 0.0f)},
-			{XMFLOAT3(10.82532f, -6.25000f, 20.00000f), XMFLOAT3(0.0f, 0.0f, 0.0f)},
-			{XMFLOAT3(10.82532f, -6.25000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 0.0f)},
-			{XMFLOAT3(10.82532f, 6.25000f, 0.00000f), XMFLOAT3(1.0f, 0.0f, 0.0f)},
-			{XMFLOAT3(10.82532f, 6.25000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 0.0f)},
-			{XMFLOAT3(10.82532f, -6.25000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
-			{XMFLOAT3(10.82532f, 6.25000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
-			{XMFLOAT3(10.82532f, 6.25000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
-			{XMFLOAT3(10.82532f, 6.25000f, 0.00000f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
-			{XMFLOAT3(0.00000f, 12.50000f, 0.00000f), XMFLOAT3(0.0f, 0.0f, 1.0f)},
-			{XMFLOAT3(0.00000f, 12.50000f, 20.00000f), XMFLOAT3(0.0f, 1.0f, 0.0f)},
-			{XMFLOAT3(10.82532f, 6.25000f, 20.00000f), XMFLOAT3(0.0f, 0.0f, 0.0f)},
-			{XMFLOAT3(0.00000f, 12.50000f, 0.00000f), XMFLOAT3(1.0f, 0.0f, 0.0f)},
-			{XMFLOAT3(0.00000f, 12.50000f, 20.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
-			{XMFLOAT3(0.00000f, 12.50000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
-			{XMFLOAT3(-10.82532f, 6.25000f, 0.00000f), XMFLOAT3(0.0f, 0.0f, 0.0f)},
-			{XMFLOAT3(-10.82532f, 6.25000f, 20.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
-			{XMFLOAT3(0.00000f, 12.50000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 0.0f)},
-			{XMFLOAT3(-10.82532f, 6.25000f, 0.00000f), XMFLOAT3(0.0f, 0.0f, 1.0f)},
-			{XMFLOAT3(-10.82532f, 6.25000f, 20.00000f), XMFLOAT3(0.0f, 1.0f, 0.0f)},
-			{XMFLOAT3(-10.82532f, 6.25000f, 0.00000f), XMFLOAT3(0.0f, 1.0f, 0.0f)},
-			{XMFLOAT3(-10.82532f, -6.25000f, 0.00000f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
-			{XMFLOAT3(-10.82532f, -6.25000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 0.0f)},
-			{XMFLOAT3(-10.82532f, 6.25000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
-			{XMFLOAT3(-10.82532f, -6.25000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
-			{XMFLOAT3(-10.82532f, -6.25000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
-			{XMFLOAT3(-10.82532f, -6.25000f, 0.00000f), XMFLOAT3(0.0f, 0.0f, 1.0f)},
-			{XMFLOAT3(0.00000f, -12.50000f, 0.00000f), XMFLOAT3(0.0f, 0.0f, 0.0f)},
-			{XMFLOAT3(0.00000f, -12.50000f, 20.00000f), XMFLOAT3(1.0f, 1.0f, 0.0f)},
-			{XMFLOAT3(-10.82532f, -6.25000f, 20.00000f), XMFLOAT3(0.0f, 1.0f, 1.0f)},
-			{XMFLOAT3(0.00000f, -12.50000f, 0.00000f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
-			{XMFLOAT3(-10.82532f, -6.25000f, 20.00000f), XMFLOAT3(0.0f, 1.0f, 0.0f)},
-			{XMFLOAT3(0.00000f, -12.50000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
-			{XMFLOAT3(10.82532f, -6.25000f, 20.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
-			{XMFLOAT3(10.82532f, 6.25000f, 20.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
-			{XMFLOAT3(0.00000f, 12.50000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 0.0f)},
-			{XMFLOAT3(-10.82532f, -6.25000f, 20.00000f), XMFLOAT3(0.0f, 1.0f, 0.0f)},
-			{XMFLOAT3(-10.82532f, 6.25000f, 20.00000f), XMFLOAT3(1.0f, 0.0f, 0.0f)},
-			{XMFLOAT3(-10.82532f, -6.25000f, 20.00000f), XMFLOAT3(0.0f, 1.0f, 0.0f)},
-			{XMFLOAT3(0.00000f, 12.50000f, 20.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
-			{XMFLOAT3(10.82532f, -6.25000f, 20.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
-			{XMFLOAT3(10.82532f, 6.25000f, 20.00000f), XMFLOAT3(0.0f, 1.0f, 1.0f)},
-			{XMFLOAT3(-10.82532f, -6.25000f, 20.00000f), XMFLOAT3(0.0f, 1.0f, 0.0f)},
-			{XMFLOAT3(10.82532f, 6.25000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
-			{XMFLOAT3(10.82532f, -6.25000f, 0.00000f), XMFLOAT3(0.0f, 0.0f, 1.0f)},
-			{XMFLOAT3(0.00000f, -12.50000f, 0.00000f), XMFLOAT3(0.0f, 0.0f, 1.0f)},
-			{XMFLOAT3(-10.82532f, -6.25000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 0.0f)},
-			{XMFLOAT3(-10.82532f, 6.25000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
-			{XMFLOAT3(0.00000f, 12.50000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 0.0f)},
-			{XMFLOAT3(-10.82532f, -6.25000f, 0.00000f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
-			{XMFLOAT3(10.82532f, 6.25000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 0.0f)},
-			{XMFLOAT3(0.00000f, -12.50000f, 0.00000f), XMFLOAT3(0.0f, 0.0f, 1.0f)},
-			{XMFLOAT3(-10.82532f, -6.25000f, 0.00000f), XMFLOAT3(1.0f, 1.0f, 0.0f)},
-			{XMFLOAT3(0.00000f, 12.50000f, 0.00000f), XMFLOAT3(0.0f, 1.0f, 1.0f)},
-			{XMFLOAT3(10.82532f, 6.25000f, 0.00000f), XMFLOAT3(0.0f, 1.0f, 1.0f)},
+		DX::ModelHelper modelHelper(L"\\Assets\\17HS1352.stl");
+		std::vector<VertexPositionColor> cubeVertices = modelHelper.GetVertices();
 
-		};
-
-		D3D11_SUBRESOURCE_DATA vertexBufferData = {0};
-		vertexBufferData.pSysMem = cubeVertices;
+		D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
+		vertexBufferData.pSysMem = &cubeVertices[0];
 		vertexBufferData.SysMemPitch = 0;
 		vertexBufferData.SysMemSlicePitch = 0;
-		CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(cubeVertices), D3D11_BIND_VERTEX_BUFFER);
-		DX::ThrowIfFailed(
-			m_deviceResources->GetD3DDevice()->CreateBuffer(
-				&vertexBufferDesc,
-				&vertexBufferData,
-				&m_vertexBuffer
-				)
-			);
+
+		CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(cubeVertices[0]) * cubeVertices.size(), D3D11_BIND_VERTEX_BUFFER);
+
+		m_deviceResources->GetD3DDevice()->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &m_vertexBuffer);
 
 		// Load mesh indices. Each trio of indices represents
 		// a triangle to be rendered on the screen.
@@ -378,52 +213,27 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		// Например: 0,2,1 означает, что вершины с индексами
 		// 0, 2 и 1 из буфера вершин составляют
 		// первый треугольник этой сетки.
-		static const unsigned short cubeIndices [] =
-		{
-			0, 1, 2,
-			3, 4, 5,
-			6, 7, 8,
-			9, 10, 11,
-			12, 13, 14,
-			15, 16, 17,
-			18, 19, 20,
-			21, 22, 23,
-			24, 25, 26,
-			27, 28, 29,
-			30, 31, 32,
-			33, 34, 35,
-			36, 37, 38,
-			39, 40, 41,
-			42, 43, 44,
-			45, 46, 47,
-			48, 49, 50,
-			51, 52, 53,
-			54, 55, 56,
-			57, 58, 59,
-		};
+		std::vector<unsigned short> cubeIndices = modelHelper.GetReletionships();
 
-		m_indexCount = ARRAYSIZE(cubeIndices);
+		m_indexCount = cubeIndices.size();
 
-		D3D11_SUBRESOURCE_DATA indexBufferData = {0};
-		indexBufferData.pSysMem = cubeIndices;
+		int y = sizeof(cubeVertices[0]) * cubeVertices.size();
+
+		D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
+		indexBufferData.pSysMem = &cubeIndices[0];
 		indexBufferData.SysMemPitch = 0;
 		indexBufferData.SysMemSlicePitch = 0;
-		CD3D11_BUFFER_DESC indexBufferDesc(sizeof(cubeIndices), D3D11_BIND_INDEX_BUFFER);
-		DX::ThrowIfFailed(
-			m_deviceResources->GetD3DDevice()->CreateBuffer(
-				&indexBufferDesc,
-				&indexBufferData,
-				&m_indexBuffer
-				)
-			);
-	});
+
+		CD3D11_BUFFER_DESC indexBufferDesc(sizeof(cubeVertices[0]) * cubeVertices.size(), D3D11_BIND_INDEX_BUFFER);
+
+		m_deviceResources->GetD3DDevice()->CreateBuffer(&indexBufferDesc, &indexBufferData, &m_indexBuffer);
+		});
 
 	// Once the cube is loaded, the object is ready to be rendered.
-
 	// Когда куб загружен, объект готов быть загружен.
-	createCubeTask.then([this] () {
+	createCubeTask.then([this]() {
 		m_loadingComplete = true;
-	});
+		});
 }
 
 void Sample3DSceneRenderer::ReleaseDeviceDependentResources()

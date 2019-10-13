@@ -21,9 +21,9 @@ namespace DX
 	class ModelHelper
 	{
 	public:
-		ModelHelper(std::string modelPath);
-		Lesson_1::VertexPositionColor* GetVertices();
-		unsigned short* GetReletionships();
+		ModelHelper(std::wstring modelPath);
+		std::vector<Lesson_1::VertexPositionColor> GetVertices();
+		std::vector<unsigned short> GetReletionships();
 
 	private:
 		std::vector<Vertex> result;
