@@ -57,7 +57,7 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 
 	// Eye is at (0,0.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis.
 	// Глаз находится на (0,0.7,1.5), глядя на точку (0,-0.1,0) с вектором вверх вдоль оси Y.
-	static const XMVECTORF32 eye = { 50.0f, 0.0f, 0.0f, 0.0f };
+	static const XMVECTORF32 eye = { 60.0f, 60.0f, 0.0f, 0.0f };
 	static const XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
 	static const XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
 
@@ -190,7 +190,7 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 	auto createCubeTask = (createPSTask && createVSTask).then([this]() {
 		// Load mesh vertices. Each vertex has a position and a color.
 		// Загружаем мешь вершин. Каждая вершина имеет позицию и цвет.
-		DX::ModelHelper modelHelper(L"\\Assets\\17HS1352.stl");
+		DX::ModelHelper modelHelper(L"\\Assets\\Корпус 1.stl");
 		std::vector<VertexPositionColor> cubeVertices = modelHelper.GetVertices();
 
 		D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
@@ -217,14 +217,12 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 
 		m_indexCount = cubeIndices.size();
 
-		int y = sizeof(cubeVertices[0]) * cubeVertices.size();
-
 		D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
 		indexBufferData.pSysMem = &cubeIndices[0];
 		indexBufferData.SysMemPitch = 0;
 		indexBufferData.SysMemSlicePitch = 0;
 
-		CD3D11_BUFFER_DESC indexBufferDesc(sizeof(cubeVertices[0]) * cubeVertices.size(), D3D11_BIND_INDEX_BUFFER);
+		CD3D11_BUFFER_DESC indexBufferDesc(sizeof(unsigned short) * cubeVertices.size(), D3D11_BIND_INDEX_BUFFER);
 
 		m_deviceResources->GetD3DDevice()->CreateBuffer(&indexBufferDesc, &indexBufferData, &m_indexBuffer);
 		});
